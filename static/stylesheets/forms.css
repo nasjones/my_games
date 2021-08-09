@@ -1,8 +1,9 @@
 #userForm {
-	display: flex;
 	border: 3px solid salmon;
+	margin: 0.625rem 30%;
+	padding: 0.625rem;
 }
 
-h1 {
-	color: blue;
+.field_wrap {
+	margin: 1.25rem;
 }

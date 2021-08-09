@@ -1,0 +1,16 @@
+.alert {
+	font-weight: bold;
+	font-size: larger;
+}
+
+.alert-success {
+	color: darkgreen;
+	background-color: lightgreen;
+	border: solid 2px darkgreen;
+}
+
+.alert-danger {
+	color: darkred;
+	background-color: rgb(207, 122, 122);
+	border: solid 2px red;
+}

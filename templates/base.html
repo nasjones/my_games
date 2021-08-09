@@ -5,14 +5,25 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		{%block title%} {%endblock%}
-		<!-- <link rel="stylesheet" href="../static/style.css"/> -->
+		<link
+			rel="stylesheet"
+			href="{{url_for('static', filename='stylesheets/forms.css')}}"
+		/>
+		<link
+			rel="stylesheet"
+			href="{{url_for('static', filename='stylesheets/alerts.css')}}"
+		/>
+		<link
+			rel="stylesheet"
+			href="{{url_for('static', filename='stylesheets/styles.css')}}"
+		/>
 		{%block links%} {%endblock%}
 	</head>
 	<body>
-		{% for category, message in get_flashed_messages(with_categories=True) %}
- 	 <!-- <div class="alert alert-{{ category }}">{{ message }}</div> -->
-	  <div>{{message}}</div>
-	  {%endfor%}
-		{%block content%} {%endblock%}
+		{% for category, message in get_flashed_messages(with_categories=True)
+		%}
+		<div class="alert alert-{{ category }}">{{ message }}</div>
+		<!-- <div>{{message}}</div> -->
+		{%endfor%} {%block content%} {%endblock%}
 	</body>
 </html>

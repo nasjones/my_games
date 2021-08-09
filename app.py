@@ -1,16 +1,17 @@
 from flask import Flask, render_template, redirect, flash, jsonify, request, session, g, url_for
-from models import User, Likes, Games, connect_db, db
+from models import User, Likes, Games, connect_db, db, reset_db
 from forms import LoginForm, SignUpForm
 from sqlalchemy.exc import IntegrityError
+from error_handling import integrityhandling
 import os
 
 app = Flask(__name__)
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABSE_URL', 'postgres///my_game'))
+    os.environ.get('DATABSE_URL', 'postgresql:///my_games'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 
@@ -26,10 +27,6 @@ def add_user_to_g():
     else:
         g.user = None
 
-    if not g.user and request.endpoint not in ['login', 'signup', 'home']:
-        flash("You must be logged in to view this page so either login or signup.")
-        return redirect(url_for('login'))
-
 
 def user_login(user):
     """Adds the user to the session"""
@@ -41,12 +38,17 @@ def user_logout():
         del session[USER_KEY]
 
 
-@app.route('/')
+@ app.route('/')
 def home():
+    if not g.user:
+        return(render_template('anon-home.html'))
+    print(g.user.user_likes)
+    # if (g.user.user_likes):
+
     return(render_template('home.html'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@ app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
 
@@ -55,7 +57,7 @@ def login():
 
         if user:
             user_login(user)
-            flash(f"Hello, {user.username}!")
+            flash(f"Hello, {user.username}!", "success")
             return redirect('/')
 
         flash("Username or Password incorrect.")
@@ -63,7 +65,7 @@ def login():
     return render_template('login.html', form=form)
 
 
-@app.route('/signup', methods=['GET', 'POST'])
+@ app.route('/signup', methods=['GET', 'POST'])
 def signup():
     form = SignUpForm()
 
@@ -74,14 +76,23 @@ def signup():
                                form.password.data)
             db.session.commit()
 
-        except IntegrityError:
-            flash("Username already taken", 'danger')
-            return render_template('users/signup.html', form=form)
+        except IntegrityError as e:
+            flash(integrityhandling(e), 'danger')
+            return render_template('signup.html', form=form)
 
         user_login(user)
-        flash(f"Hello, {user.username}!")
+        flash(f"Hello, {user.username}!", "success")
         return redirect('/')
 
         flash("Username or Password incorrect.")
 
     return render_template('signup.html', form=form)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST':
+        user_logout()
+        flash("successfully logged out", "success")
+        return redirect('/')
+    return render_template("logout.html")

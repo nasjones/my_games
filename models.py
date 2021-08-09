@@ -10,6 +10,11 @@ def connect_db(app):
     db.init_app(app)
 
 
+def reset_db():
+    db.drop_all()
+    db.create_all()
+
+
 class Likes(db.Model):
 
     __tablename__ = 'likes'
@@ -118,8 +123,3 @@ class User(db.Model):
                 return user
 
         return False
-
-
-def connect_db(app):
-    db.app = app
-    db.init_app(app)
