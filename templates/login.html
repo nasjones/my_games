@@ -1,0 +1,25 @@
+{%extends 'base.html'%}
+<!-- Title block -->
+{%block title%}
+<title>Login</title>
+{%endblock%}
+<!-- Links block -->
+{%block links%}
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='stylesheets/forms.css')}}"/>
+ {%endblock%}
+<!-- content block -->
+{%block content%}
+<h1>Login</h1>
+<form method="POST" id="userForm" >
+    {{ form.hidden_tag() }}
+
+    {% for field in form if field.widget.input_type != 'hidden' %}
+      {% for error in field.errors %}
+        <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+      {{ field(placeholder=field.label.text, class="form-control") }}
+    {% endfor %}
+
+    <button class="btn btn-primary btn-block btn-lg">Log in</button>
+  </form>
+{%endblock%}
