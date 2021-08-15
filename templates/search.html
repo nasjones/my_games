@@ -1,13 +1,15 @@
 {%extends 'base.html'%}
 <!-- Title block -->
 {%block title%}
-<title>Home</title>
+<title>Search</title>
 {%endblock%}
 <!-- content block -->
 {%block content%}
 <header>
-	<div id="head-wrap"><a href="/logout">logout</a></div>
-	<h1>MY GAMES</h1>
+	<div id="head-wrap">
+		<a href="/">Home</a> &#9737; <a href="/logout">logout</a>
+	</div>
+	<h1>GAME SEARCH</h1>
 	<div>
 		<form method="POST" id="search_bar" action="/search">
 			{{ form.hidden_tag() }}
@@ -26,10 +28,6 @@
 			<button class="btn btn-primary btn-block btn-lg">Search</button>
 		</form>
 	</div>
-	{%if likes%} {%for item in likes%}
-	<div>{{item.name}}</div>
-	{%endfor%} {%else%}
-	<h2>You haven't told us what you like yet!</h2>
-	{%endif%}
 </header>
+<ul id="game_list"></ul>
 {%endblock%}

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from platforms import platforms
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -41,7 +42,6 @@ class Games(db.Model):
     id = db.Column(
         db.Integer,
         primary_key=True,
-        autoincrement=True
     )
 
     api_id = db.Column(
@@ -123,3 +123,27 @@ class User(db.Model):
                 return user
 
         return False
+
+
+class Platforms(db.Model):
+    """Table for platforms"""
+
+    __tablename__ = "platforms"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+        nullable=False
+    )
+
+    name = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+
+def platform_setup():
+    for item in platforms:
+        new_plat = Platforms(id=item['id'], name=item['name'])
+        db.session.add(new_plat)
+    db.session.commit()

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Email, Length
+from models import Platforms
 
 
 class SignUpForm(FlaskForm):
@@ -16,3 +17,11 @@ class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
+
+
+class SearchForm(FlaskForm):
+    """Search form."""
+    query = StringField('Query', validators=[DataRequired()])
+    platform = SelectField('Platform', coerce=int)
+    # choices=[(
+    #     plat.id, plat.name) for plat in Platforms.query.order_by('name').all()], coerce=int)

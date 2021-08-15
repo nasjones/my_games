@@ -1,2 +1,5 @@
 venv/
 __pycache__/
+platform_fill.py
+platforms.py
+.env
