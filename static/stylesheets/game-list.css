@@ -1,0 +1,27 @@
+#game_list {
+	display: flex;
+	flex-wrap: wrap;
+	padding-inline-start: inherit;
+}
+.game_item {
+	list-style-type: none;
+	border: solid 2px green;
+	display: flex;
+	flex-grow: 1;
+	width: 41%;
+	margin: 5px;
+	padding: 2px;
+}
+
+.game_item > * {
+	padding: 10px;
+}
+
+.game_image {
+	max-height: 45vh;
+	max-width: 50%;
+}
+
+.info_wrap {
+	width: 50%;
+}

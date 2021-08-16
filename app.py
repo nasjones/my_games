@@ -4,6 +4,8 @@ from functools import wraps
 from forms import LoginForm, SignUpForm, SearchForm
 from sqlalchemy.exc import IntegrityError
 from error_handling import integrityhandling
+from api_calls import search_api
+import math
 import os
 app = Flask(__name__)
 
@@ -112,12 +114,15 @@ def logout():
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
-    print(f"{request.args.get('query')}")
-
     form = SearchForm()
+    game_list = None
+    pages = None
 
     form.platform.choices = [(
         plat.id, plat.name) for plat in Platforms.query.order_by('name').all()]
     if form.validate_on_submit():
-        print(form.platform.data, form.query.data)
-    return(render_template('search.html', form=form))
+        game_data = search_api(form.query.data, form.platform.data)
+        if game_data:
+            game_list = game_data["results"]
+            pages = math.ceil(game_data["number_of_total_results"]/100)
+    return(render_template('search.html', form=form, game_list=game_list, pages=pages))
