@@ -14,6 +14,7 @@ def connect_db(app):
 def reset_db():
     db.drop_all()
     db.create_all()
+    platform_setup()
 
 
 class Likes(db.Model):
@@ -31,22 +32,24 @@ class Likes(db.Model):
     )
 
     game_id = db.Column(
-        db.Integer,
+        db.Text,
         db.ForeignKey('games.id', ondelete='cascade')
     )
+
+    @classmethod
+    def add_like(cls, user_id, game_id):
+        new_like = Likes(user_id=user_id, game_id=game_id)
+        db.session.add(new_like)
+        return new_like
 
 
 class Games(db.Model):
     __tablename__ = 'games'
 
     id = db.Column(
-        db.Integer,
-        primary_key=True,
-    )
-
-    api_id = db.Column(
         db.Text,
-        nullable=False
+        nullable=False,
+        primary_key=True
     )
 
     name = db.Column(
@@ -54,9 +57,25 @@ class Games(db.Model):
         nullable=False
     )
 
+    description = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    image_url = db.Column(
+        db.Text
+    )
+
     deck = db.Column(
         db.Text
     )
+
+    @classmethod
+    def add_game(cls, id, name, description, image_url, deck):
+        game = Games(id=id, name=name, description=description,
+                     image_url=image_url, deck=deck)
+        db.session.add(game)
+        return game
 
 
 class User(db.Model):

@@ -25,3 +25,29 @@
 .info_wrap {
 	width: 50%;
 }
+@media screen and (max-width: 700px) {
+	.game_item {
+		width: 90%;
+	}
+}
+
+.star-check {
+	display: none;
+}
+
+.star {
+	font-size: 1rem;
+	color: gold;
+}
+
+.star:hover {
+	cursor: pointer;
+}
+
+.star-check:checked + .star::before {
+	content: "\2605";
+}
+
+.star::before {
+	content: "\2606";
+}

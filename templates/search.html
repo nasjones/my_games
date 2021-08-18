@@ -41,7 +41,11 @@
 {%if game_list%}
 <ul id="game_list">
 	{%for item in game_list%}
-	<li class="game_item">
+	<li
+		class="game_item"
+		data-desc="{{item.description}}"
+		data-id="{{item.guid}}"
+	>
 		<img
 			src="{{item.image.medium_url}}"
 			alt="{{item.name}} image"
@@ -51,16 +55,35 @@
 			<a href="/games/{{item.guid}}">{{item.name}}</a>
 			<p>Description: {{item.deck}}</p>
 		</div>
+		<label class="star-wrap">
+			<input type="checkbox" class="star-check" />
+			<span class="star"></span>
+		</label>
 	</li>
 	{%endfor%}
 </ul>
-<button id="previous">prev</button>
-<input type="number" name="page" id="page-number" value="1" /><span
-	>/{{pages}}</span
->
+{%if pages["amount"]> 1 %}
+<button id="previous" disabled>prev</button>
+<input
+	type="number"
+	name="page"
+	id="page-number"
+	value="1"
+	data-game="{{pages['query']}}"
+	data-platform="{{pages['platform']}}"
+/><span>/{{pages["amount"]}}</span>
+
 <button id="next">next</button>
 {%else%}
+<span>{{pages["amount"]}}/{{pages["amount"]}}</span>
+{%endif%} {%else%}
 <h2>Sorry no results! Try searching for something else.</h2>
 {%endif%} {%else%}
 <h2>Use the search bar above to find some games!</h2>
-{%endif%} {%endblock%}
+{%endif%}
+<!-- End of content block -->
+{%endblock%}
+<!-- Script block -->
+{%block scripts%}
+<script src="/static/scripts/games.js"></script>
+{%endblock%}

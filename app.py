@@ -112,17 +112,53 @@ def logout():
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@app.route('/search/<page>')
 @login_required
-def search():
+def search(page=1):
     form = SearchForm()
     game_list = None
-    pages = None
+    pages = {}
 
     form.platform.choices = [(
         plat.id, plat.name) for plat in Platforms.query.order_by('name').all()]
     if form.validate_on_submit():
-        game_data = search_api(form.query.data, form.platform.data)
+        game_data = search_api(form.query.data, form.platform.data, page)
         if game_data:
             game_list = game_data["results"]
-            pages = math.ceil(game_data["number_of_total_results"]/100)
+            pages["amount"] = math.ceil(
+                game_data["number_of_total_results"]/100)
+            pages["query"] = form.query.data
+            pages["platform"] = form.platform.data
+
     return(render_template('search.html', form=form, game_list=game_list, pages=pages))
+
+
+@app.route('/api/like', methods=["POST"])
+@login_required
+def like_game():
+    info = request.json["game"]
+    game = Games.query.get(info["id"])
+    print(game)
+    if not game:
+        game = Games.add_game(**info)
+
+    new_like = Likes.add_like(user_id=g.user.id, game_id=game.id)
+    db.session.commit()
+    return jsonify({"new_like": new_like.id})
+
+
+@app.route('/api/unlike', methods=["DELETE"])
+@login_required
+def unlike_game():
+    info = request.json["game"]
+    like = Likes.query.filter_by(user_id=g.user.id, game_id=info["id"])
+    db.session.delete(like)
+    return jsonify({"deleted": like.id})
+
+
+@app.route('/api/games/<page>')
+@login_required
+def change_page(page, methods=['GET']):
+    game_data = search_api(
+        request.json["query"], request.json["platform"], request.json["page"])
+    return(jsonify({"data": game_data}))

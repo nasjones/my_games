@@ -23,5 +23,3 @@ class SearchForm(FlaskForm):
     """Search form."""
     query = StringField('Query', validators=[DataRequired()])
     platform = SelectField('Platform', coerce=int)
-    # choices=[(
-    #     plat.id, plat.name) for plat in Platforms.query.order_by('name').all()], coerce=int)
