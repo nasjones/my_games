@@ -25,9 +25,13 @@
 {{game.description |safe}}
 <div>
 	<h4>Similar games:</h4>
-	{%for game in similar%} &#9737;
+	{%if similar%} {%for game in similar%} &#9737;
 	<a href="/search/{{game['Name']}}/0/1">{{game.Name}}</a>
-	{%endfor%}
+	{%endfor%} {%else%}
+	<strong>
+		Sorry we're having trouble finding similar titles for this game.
+	</strong>
+	{%endif%}
 </div>
 {%endblock%}
 <!-- Scripts block -->

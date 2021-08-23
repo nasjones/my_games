@@ -79,9 +79,7 @@ class Games(db.Model):
 
     @classmethod
     def add_game(cls, id, name, description, image_url, deck):
-        # print(description)
-        # description = re.search("<p>(.*?)</p>", description)
-        # print(description)
+        description = re.sub("(?=<a).*?(>)|(</a>)", "", description)
         game = Games(id=id, name=name, description=description,
                      image_url=image_url, deck=deck)
         db.session.add(game)
