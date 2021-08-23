@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from platforms import platforms
+import re
 
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -36,6 +37,9 @@ class Likes(db.Model):
         db.ForeignKey('games.id', ondelete='cascade')
     )
 
+    def __repr__(self):
+        return f'user id:{self.user_id}, game id:{self.game_id}'
+
     @classmethod
     def add_like(cls, user_id, game_id):
         new_like = Likes(user_id=user_id, game_id=game_id)
@@ -70,8 +74,14 @@ class Games(db.Model):
         db.Text
     )
 
+    def __repr__(self):
+        return f'{self.name}'
+
     @classmethod
     def add_game(cls, id, name, description, image_url, deck):
+        # print(description)
+        # description = re.search("<p>(.*?)</p>", description)
+        # print(description)
         game = Games(id=id, name=name, description=description,
                      image_url=image_url, deck=deck)
         db.session.add(game)
@@ -112,6 +122,9 @@ class User(db.Model):
         primaryjoin=(Likes.user_id == id),
         secondaryjoin=(Likes.game_id == Games.id)
     )
+
+    def __repr__(self):
+        return f'{self.username}'
 
     @classmethod
     def signup(cls, username, email, password):

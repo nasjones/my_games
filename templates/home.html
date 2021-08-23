@@ -3,33 +3,54 @@
 {%block title%}
 <title>Home</title>
 {%endblock%}
+<!-- Links block -->
+{%block links%}
+<link
+	rel="stylesheet"
+	href="{{url_for('static', filename='stylesheets/game-list.css')}}"
+/>
+{%endblock%}
 <!-- content block -->
 {%block content%}
 <header>
-	<div id="head-wrap"><a href="/logout">logout</a></div>
-	<h1>MY GAMES</h1>
-	<div>
-		<form method="POST" id="search_bar" action="/search">
-			{{ form.hidden_tag() }}
-			<!--Loops through all fields that arent hidden  -->
-			{% for field in form if field.widget.input_type !='hidden' %}
-			<!-- Displays errors for each field -->
-			{% for error in field.errors %}
-			<span class="text-danger">{{ error }}</span>
-			{% endfor %}
-			<!-- Creates html field -->
-			<div class="select_field_wrap">
-				{{ field(placeholder=field.label.text, class="form-control") }}
-			</div>
-			{% endfor %}
-
-			<button class="btn btn-primary btn-block btn-lg">Search</button>
-		</form>
+	<div id="head-wrap">
+		<a href="/search">Search</a>
+		&#9737;
+		<a href="/logout">logout</a>
 	</div>
-	{%if likes%} {%for item in likes%}
-	<div>{{item.name}}</div>
-	{%endfor%} {%else%}
-	<h2>You haven't told us what you like yet!</h2>
-	{%endif%}
+	<h1>Your Likes</h1>
 </header>
+{%if likes%}
+<ul id="game_list">
+	{%for item in likes%}
+	<li
+		class="game_item"
+		data-desc="{{item.description}}"
+		data-id="{{item.id}}"
+	>
+		<img
+			src="{{item.image_url}}"
+			alt="{{item.name}} image"
+			class="game_image"
+		/>
+		<div class="info_wrap">
+			<a href="/game/{{item.id}}">{{item.name}}</a>
+			<p>{{item.deck}}</p>
+		</div>
+
+		<label class="star-wrap">
+			<input type="checkbox" class="star-check" checked />
+			<span class="star"></span>
+		</label>
+	</li>
+	{%endfor%}
+</ul>
+{%else%}
+<h2>You haven't told us what you like yet!</h2>
+{%endif%}
+<a href="/search" class="link-button">Add to your likes</a>
+{%endblock%}
+<!-- Scripts block -->
+{%block scripts%}
+<script src="/static/scripts/games.js"></script>
 {%endblock%}

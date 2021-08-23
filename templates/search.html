@@ -19,20 +19,32 @@
 	<h1>GAME SEARCH</h1>
 	<div>
 		<form method="POST" id="search_bar" action="/search">
-			{{ form.hidden_tag() }}
-			<!--Loops through all fields that arent hidden  -->
-			{% for field in form if field.widget.input_type !='hidden' %}
-			<!-- Displays errors for each field -->
-			{% for error in field.errors %}
-			<span class="text-danger">{{ error }}</span>
-			{% endfor %}
-			<!-- Creates html field -->
 			<div class="select_field_wrap">
-				{{ field(placeholder=field.label.text, class="form-control") }}
+				<input
+					class="form-control"
+					id="query"
+					name="query"
+					placeholder="Query"
+					required=""
+					type="text"
+					{%if
+					title%}
+					value="{{title}}"
+					{%endif%}
+				/>
 			</div>
-			{% endfor %}
-
-			<button class="btn btn-primary btn-block btn-lg">Search</button>
+			<div class="select_field_wrap">
+				<select name="platform" id="platform">
+					{%for platform in platforms%}
+					<option value="{{platform.id}}"{%if platform.id==platform_id%}
+					selected
+					{%endif%}>{{platform.name}}</option>
+					{%endfor%}
+				</select>
+			</div>
+			<button class="btn btn-primary btn-block btn-lg" type="submit">
+				Search
+			</button>
 		</form>
 	</div>
 </header>
@@ -52,31 +64,37 @@
 			class="game_image"
 		/>
 		<div class="info_wrap">
-			<a href="/games/{{item.guid}}">{{item.name}}</a>
+			<a href="/game/{{item.guid}}">{{item.name}}</a>
 			<p>Description: {{item.deck}}</p>
 		</div>
+
 		<label class="star-wrap">
-			<input type="checkbox" class="star-check" />
+			<input type="checkbox" class="star-check"{%if item.guid in likes%}
+			checked
+			{%endif%} />
 			<span class="star"></span>
 		</label>
 	</li>
 	{%endfor%}
 </ul>
 {%if pages["amount"]> 1 %}
-<button id="previous" disabled>prev</button>
-<input
-	type="number"
-	name="page"
-	id="page-number"
-	value="1"
-	data-game="{{pages['query']}}"
-	data-platform="{{pages['platform']}}"
-/><span>/{{pages["amount"]}}</span>
-
-<button id="next">next</button>
+<div id="page-wrap">
+{%if page > 1%}
+<a href="/search/{{title}}/{{platform_id}}/{{page - 1}}" class="link-button" >
+	prev
+</a>
+{%endif%}
+<span id="page-span">{{page}}/{{pages["amount"]}}</span>
+{%if page !=pages["amount"]%}
+<a href="/search/{{title}}/{{platform_id}}/{{page + 1}}" class="link-button" >
+	next
+</a>
+{%endif%}
 {%else%}
 <span>{{pages["amount"]}}/{{pages["amount"]}}</span>
-{%endif%} {%else%}
+{%endif%}
+</div>
+{%else%}
 <h2>Sorry no results! Try searching for something else.</h2>
 {%endif%} {%else%}
 <h2>Use the search bar above to find some games!</h2>

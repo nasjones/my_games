@@ -4,7 +4,7 @@ from functools import wraps
 from forms import LoginForm, SignUpForm, SearchForm
 from sqlalchemy.exc import IntegrityError
 from error_handling import integrityhandling
-from api_calls import search_api
+from api_calls import search_api, single_game, similar_games
 import math
 import os
 app = Flask(__name__)
@@ -54,10 +54,10 @@ def user_logout():
 def home():
     if not g.user:
         return(render_template('anon-home.html'))
-    form = SearchForm()
-    form.platform.choices = [(
-        plat.id, plat.name) for plat in Platforms.query.order_by('name').all()]
-    return(render_template('home.html', likes=g.user.user_likes, form=form))
+    platforms = Platforms.query.order_by('name').all()
+    print(g.user.user_likes)
+    print(Likes.query.all())
+    return(render_template('home.html', likes=g.user.user_likes, platforms=platforms))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -111,26 +111,37 @@ def logout():
     return render_template("logout.html")
 
 
-@app.route('/search', methods=['GET', 'POST'])
-@app.route('/search/<page>')
+@app.route('/search/<title>/<int:platform>/<int:page>', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET'])
 @login_required
-def search(page=1):
-    form = SearchForm()
+def search(title=None, platform=None, page=1):
     game_list = None
     pages = {}
+    platforms = Platforms.query.order_by('name').all()
+    game_data = search_api(title, platform, page)
+    likes = [game.id for game in g.user.user_likes]
+    if game_data:
+        game_list = game_data["results"]
+        pages["amount"] = math.ceil(
+            game_data["number_of_total_results"]/100)
+        pages["query"] = title
+        pages["platform"] = platform
 
-    form.platform.choices = [(
-        plat.id, plat.name) for plat in Platforms.query.order_by('name').all()]
-    if form.validate_on_submit():
-        game_data = search_api(form.query.data, form.platform.data, page)
-        if game_data:
-            game_list = game_data["results"]
-            pages["amount"] = math.ceil(
-                game_data["number_of_total_results"]/100)
-            pages["query"] = form.query.data
-            pages["platform"] = form.platform.data
+    return(render_template('search.html', game_list=game_list, pages=pages, platforms=platforms, page=page, title=title, platform_id=platform, likes=likes))
 
-    return(render_template('search.html', form=form, game_list=game_list, pages=pages))
+
+@app.route('/game/<id>')
+@login_required
+def game_display(id):
+    game = Games.query.filter_by(id=id).first()
+    if not game:
+        game_data = single_game(id)["results"]
+
+        game = Games.add_game(
+            id=game_data["guid"], name=game_data["name"], description=game_data["description"], image_url=game_data["image"]["medium_url"], deck=game_data["deck"])
+
+    similar = similar_games(game.name)
+    return render_template('game.html', game=game, similar=similar)
 
 
 @app.route('/api/like', methods=["POST"])
@@ -138,7 +149,6 @@ def search(page=1):
 def like_game():
     info = request.json["game"]
     game = Games.query.get(info["id"])
-    print(game)
     if not game:
         game = Games.add_game(**info)
 
@@ -147,18 +157,20 @@ def like_game():
     return jsonify({"new_like": new_like.id})
 
 
-@app.route('/api/unlike', methods=["DELETE"])
+@app.route('/api/unlike', methods=["POST"])
 @login_required
 def unlike_game():
-    info = request.json["game"]
-    like = Likes.query.filter_by(user_id=g.user.id, game_id=info["id"])
+    like = Likes.query.filter_by(
+        user_id=g.user.id, game_id=request.json["id"]).first()
+
     db.session.delete(like)
+    db.session.commit()
     return jsonify({"deleted": like.id})
 
 
-@app.route('/api/games/<page>')
-@login_required
-def change_page(page, methods=['GET']):
-    game_data = search_api(
-        request.json["query"], request.json["platform"], request.json["page"])
-    return(jsonify({"data": game_data}))
+# @app.route('/api/games/<page>')
+# @login_required
+# def change_page(page, methods=['GET']):
+#     game_data = search_api(
+#         request.json["query"], request.json["platform"], request.json["page"])
+#     return(jsonify({"data": game_data}))
