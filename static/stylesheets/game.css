@@ -1,0 +1,12 @@
+#desc-wrap {
+	margin: 0px 6rem;
+}
+
+#game-pic {
+	height: 20rem;
+}
+
+#info-wrap {
+	display: flex;
+	margin: 1rem;
+}

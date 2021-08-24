@@ -134,14 +134,16 @@ def search(title=None, platform=None, page=1):
 @login_required
 def game_display(id):
     game = Games.query.filter_by(id=id).first()
+    # print(game.description)
     if not game:
         game_data = single_game(id)["results"]
 
         game = Games.add_game(
             id=game_data["guid"], name=game_data["name"], description=game_data["description"], image_url=game_data["image"]["medium_url"], deck=game_data["deck"])
-
+    db.session.commit()
     similar = similar_games(game.name)
-    return render_template('game.html', game=game, similar=similar)
+    liked = (game in g.user.user_likes)
+    return render_template('game.html', game=game, similar=similar, liked=liked)
 
 
 @app.route('/api/like', methods=["POST"])

@@ -18,7 +18,7 @@
 		&#9737;
 		<a href="/logout">logout</a>
 	</div>
-	<h1>Your Likes</h1>
+	<h1>Likes</h1>
 </header>
 {%if likes%}
 <ul id="game_list">
@@ -48,9 +48,9 @@
 {%else%}
 <h2>You haven't told us what you like yet!</h2>
 {%endif%}
-<a href="/search" class="link-button">Add to your likes</a>
+<a href="/search" class="link-button">Add games</a>
 {%endblock%}
 <!-- Scripts block -->
 {%block scripts%}
-<script src="/static/scripts/games.js"></script>
+<script src="/static/scripts/search.js"></script>
 {%endblock%}

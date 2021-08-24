@@ -5,10 +5,14 @@
 {%endblock%}
 <!-- Links block -->
 {%block links%}
-<!-- <link
+<link
 	rel="stylesheet"
 	href="{{url_for('static', filename='stylesheets/game-list.css')}}"
-/> -->
+/>
+<link
+	rel="stylesheet"
+	href="{{url_for('static', filename='stylesheets/game.css')}}"
+/>
 {%endblock%}
 <!-- content block -->
 {%block content%}
@@ -22,7 +26,28 @@
 	</div>
 </header>
 <h1>{{game.name}}</h1>
-{{game.description |safe}}
+<div id="info-wrap">
+	<div>
+		<img src="{{game.image_url}}" alt="{{game.name}} photo" id="game-pic" />
+		<br />
+		<label class="star-wrap">
+			<input
+				type="checkbox"
+				class="star-check"
+				{%if
+				liked%}
+				checked
+				{%endif%}
+				id="{{game.id}}"
+			/>
+			<span class="star"></span>
+		</label>
+	</div>
+	<div id="desc-wrap">
+		<h2>Description:</h2>
+		{{game.description |safe}}
+	</div>
+</div>
 <div>
 	<h4>Similar games:</h4>
 	{%if similar%} {%for game in similar%} &#9737;
@@ -33,8 +58,9 @@
 	</strong>
 	{%endif%}
 </div>
+
 {%endblock%}
 <!-- Scripts block -->
 {%block scripts%}
-<script src="/static/scripts/games.js"></script>
+<script src="/static/scripts/game.js"></script>
 {%endblock%}

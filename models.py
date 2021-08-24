@@ -67,11 +67,13 @@ class Games(db.Model):
     )
 
     image_url = db.Column(
-        db.Text
+        db.Text,
+        nullable=False
     )
 
     deck = db.Column(
-        db.Text
+        db.Text,
+        nullable=False
     )
 
     def __repr__(self):
@@ -79,7 +81,20 @@ class Games(db.Model):
 
     @classmethod
     def add_game(cls, id, name, description, image_url, deck):
-        description = re.sub("(?=<a).*?(>)|(</a>)", "", description)
+        if description:
+            print(description)
+            description = re.search("(<p>.*?)(?=<h2|$)", description)
+            description = re.sub("(?=<a).*?(>)|(</a>)",
+                                 "", description.group())
+        else:
+            description = "Sorry no description available"
+
+        if not image_url:
+            image_url = "./static/images/pixel-mark.png"
+
+        if not deck:
+            deck = "Sorry no description available"
+
         game = Games(id=id, name=name, description=description,
                      image_url=image_url, deck=deck)
         db.session.add(game)

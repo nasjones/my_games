@@ -26,7 +26,6 @@ async function likeGame(e) {
 			game,
 		});
 	} else {
-		console.log("going");
 		await axios.post(API_BASE_URL + `/unlike`, {
 			id: game.id,
 		});

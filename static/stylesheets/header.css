@@ -1,0 +1,15 @@
+@font-face {
+	font-family: penguin;
+	src: url("/static/fonts/Penguin-Regular.ttf");
+}
+@font-face {
+	font-family: adventure;
+	src: url("/static/fonts/Adventure.otf");
+}
+
+h1 {
+	font-family: penguin;
+}
+* {
+	font-family: adventure;
+}
