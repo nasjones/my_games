@@ -17,7 +17,7 @@ def page_not_found(e):
 app = Flask(__name__)
 app.register_error_handler(404, page_not_found)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///my_games'))
+    os.environ.get('DATABASE_URL'.replace("://", "ql://", 1), 'postgresql:///my_games'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
