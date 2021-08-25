@@ -19,7 +19,7 @@ app.register_error_handler(404, page_not_found)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     os.environ.get('DATABASE_URL', 'postgresql:///my_games').replace("postgres://", "postgresql://", 1))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-# app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 
@@ -147,7 +147,7 @@ def search(title=None, platform=None, page=1):
     if game_data:
         game_list = game_data["results"]
         pages["amount"] = math.ceil(
-            game_data["number_of_total_results"]/10)
+            game_data["number_of_total_results"]/5)
         pages["query"] = title
         pages["platform"] = platform
 
