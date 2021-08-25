@@ -1,9 +1,46 @@
+@font-face {
+	font-family: Austie;
+	src: url("/static/fonts/Austie\ Bost\ Chunky\ Description.ttf");
+}
+@font-face {
+	font-family: Komika;
+	src: url("/static/fonts/KOMIKAGL.ttf");
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: Komika;
+}
+
 * {
 	text-align: center;
+	font-family: Austie;
 }
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
 #head-wrap {
 	text-align: end;
 }
+
 body {
-	background-color: lightblue;
+	background-color: rgb(189, 97, 87);
+}
+
+footer {
+	margin-top: 2rem;
+}
+
+p {
+	line-height: 115%;
+}
+
+a {
+	color: rgb(16, 45, 99);
 }

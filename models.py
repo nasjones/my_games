@@ -10,6 +10,7 @@ bcrypt = Bcrypt()
 def connect_db(app):
     db.app = app
     db.init_app(app)
+    platform_setup()
 
 
 def reset_db():
@@ -19,6 +20,7 @@ def reset_db():
 
 
 class Likes(db.Model):
+    """Likes model"""
 
     __tablename__ = 'likes'
 
@@ -48,6 +50,7 @@ class Likes(db.Model):
 
 
 class Games(db.Model):
+    """Games Model"""
     __tablename__ = 'games'
 
     id = db.Column(
@@ -82,7 +85,6 @@ class Games(db.Model):
     @classmethod
     def add_game(cls, id, name, description, image_url, deck):
         if description:
-            print(description)
             description = re.search("(<p>.*?)(?=<h2|$)", description)
             description = re.sub("(?=<a).*?(>)|(</a>)",
                                  "", description.group())

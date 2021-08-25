@@ -5,7 +5,8 @@
 }
 .game_item {
 	list-style-type: none;
-	border: solid 2px green;
+	border: solid 2px lightblue;
+	border-radius: 5px;
 	display: flex;
 	flex-grow: 1;
 	width: 41%;
@@ -37,7 +38,7 @@
 
 .star {
 	font-size: 1rem;
-	color: red;
+	color: rgb(16, 45, 99);
 }
 
 .star:hover {

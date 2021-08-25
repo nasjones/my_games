@@ -16,15 +16,20 @@ BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={name}&type=game&limit=3
 
 
 def search_api(name, platform_id, page):
+    """Function used to reach the search portion of the video game api"""
+    # Just a failsafe if the user managed to submit an empty string to return none
     if name:
         name = f"name:{name}"
     else:
         return(None)
 
+    # Set the platform id for the api call
     if(platform_id == 0):
         platform = ""
     else:
         platform = f"platforms:{platform_id}"
+
+    # Set the offset number for the api call to get all results by separating into pages
     if (page > 1):
         offset = (page-1)*100
     else:
@@ -38,6 +43,7 @@ def search_api(name, platform_id, page):
 
 
 def single_game(id):
+    """function used to reach the singular video game portion of the video game api"""
     endpoint = BASE_URL_GAME.format(
         key=GB_key, id=id)
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
@@ -46,6 +52,7 @@ def single_game(id):
 
 
 def similar_games(name):
+    """function used to reach the similar video games api"""
     endpoint = BASE_URL_SIMILAR.format(
         key=TD_key, name=name)
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})

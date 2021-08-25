@@ -13,13 +13,14 @@
 <!-- content block -->
 {%block content%}
 <header>
+	<div>My Games</div>
 	<div id="head-wrap">
 		<a href="/search">Search</a>
 		&#9737;
 		<a href="/logout">logout</a>
 	</div>
-	<h1>Likes</h1>
 </header>
+<h1>Likes</h1>
 {%if likes%}
 <ul id="game_list">
 	{%for item in likes%}
