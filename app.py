@@ -147,7 +147,7 @@ def search(title=None, platform=None, page=1):
     if game_data:
         game_list = game_data["results"]
         pages["amount"] = math.ceil(
-            game_data["number_of_total_results"]/100)
+            game_data["number_of_total_results"]/10)
         pages["query"] = title
         pages["platform"] = platform
 
@@ -193,6 +193,7 @@ def like_game():
 @login_required
 def unlike_game():
     """Endpoint allowing users to remove game from their likes"""
+    # gets like id from the database
     like = Likes.query.filter_by(
         user_id=g.user.id, game_id=request.json["id"]).first()
 
