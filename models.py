@@ -10,13 +10,12 @@ bcrypt = Bcrypt()
 def connect_db(app):
     db.app = app
     db.init_app(app)
-    platform_setup()
 
 
-def reset_db():
-    db.drop_all()
-    db.create_all()
-    platform_setup()
+# def reset_db():
+#     db.drop_all()
+#     db.create_all()
+#     platform_setup()
 
 
 class Likes(db.Model):
