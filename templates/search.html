@@ -21,88 +21,37 @@
 	</div>
 </header>
 <h1>GAME SEARCH</h1>
-	<div>
-		<form method="POST" id="search_bar" action="/search">
-			<div class="select_field_wrap">
-				<input
-					class="form-control"
-					id="query"
-					name="query"
-					placeholder="Query"
-					required=""
-					type="text"
-					{%if
-					title%}
-					value="{{title}}"
-					{%endif%}
-				/>
-			</div>
-			<div class="select_field_wrap">
-				<select name="platform" id="platform">
-					{%for platform in platforms%}
-					<option value="{{platform.id}}"{%if platform.id==platform_id%}
-					selected
-					{%endif%}>{{platform.name}}</option>
-					{%endfor%}
-				</select>
-			</div>
-			<button class="btn btn-primary btn-block btn-lg" type="submit">
-				Search
-			</button>
-		</form>
-	</div>
-{%if game_list is not none%}
-<!-- Second if statement to determine if it is empty -->
-{%if game_list%}
-<ul id="game_list">
-	{%for item in game_list%}
-	<li
-		class="game_item"
-		data-desc="{{item.description}}"
-		data-id="{{item.guid}}"
-	>
-		<img
-			src="{{item.image.medium_url}}"
-			alt="{{item.name}} image"
-			class="game_image"
-		/>
-		<div class="info_wrap">
-			<a href="/game/{{item.guid}}">{{item.name}}</a>
-			<p>Description: {{item.deck}}</p>
+<div>
+	<form method="POST" id="search_bar" action="/search">
+		<div class="select_field_wrap">
+			<input
+				class="form-control"
+				id="query"
+				name="query"
+				placeholder="Query"
+				required=""
+				type="text"
+				{%if
+				title%}
+				value="{{title}}"
+				{%endif%}
+			/>
 		</div>
-
-		<label class="star-wrap">
-			<input type="checkbox" class="star-check"{%if item.guid in likes%}
-			checked
-			{%endif%} />
-			<span class="star"></span>
-		</label>
-	</li>
-	{%endfor%}
-</ul>
-{%if pages["amount"]> 1 %}
-<div id="page-wrap">
-{%if page > 1%}
-<a href="/search/{{title}}/{{platform_id}}/{{page - 1}}" class="link-button" >
-	prev
-</a>
-{%endif%}
-<span id="page-span">{{page}}/{{pages["amount"]}}</span>
-{%if page !=pages["amount"]%}
-<a href="/search/{{title}}/{{platform_id}}/{{page + 1}}" class="link-button" >
-	next
-</a>
-{%endif%}
-{%else%}
-<span>{{pages["amount"]}}/{{pages["amount"]}}</span>
-{%endif%}
+		<div class="select_field_wrap">
+			<select name="platform" id="platform">
+				{%for platform in platforms%}
+				<option value="{{platform.id}}">{{platform.name}}</option>
+				{%endfor%}
+			</select>
+		</div>
+		<button class="btn btn-primary btn-block btn-lg" type="submit">
+			Search
+		</button>
+	</form>
 </div>
-{%else%}
-<h2>Sorry no results! Try searching for something else.</h2>
-{%endif%} {%else%}
-<h2>Use the search bar above to find some games!</h2>
-{%endif%}
-<!-- End of content block -->
+<ul id="game_list"></ul>
+<h2 id="info_text">Use the search bar above to find some games!</h2>
+
 {%endblock%}
 <!-- Script block -->
 {%block scripts%}

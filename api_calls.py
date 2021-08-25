@@ -9,7 +9,7 @@ load_dotenv()
 GB_key = os.environ.get("gamebomb_key")
 TD_key = os.environ.get("tastedive_key")
 
-BASE_URL_SEARCH = "https://www.giantbomb.com/api/games/?api_key={key}&offset={offset}&format=json&filter={name},{platform}&limit=5"
+BASE_URL_SEARCH = "https://www.giantbomb.com/api/games/?api_key={key}&offset={offset}&format=json&filter={name},{platform}&field_list=deck,description,guid,image,name"
 
 BASE_URL_GAME = "https://www.giantbomb.com/api/game/{id}/?api_key={key}&format=json"
 
@@ -32,12 +32,13 @@ def search_api(name, platform_id, page):
 
     # Set the offset number for the api call to get all results by separating into pages
     if (page > 1):
-        offset = (page-1)*5
+        offset = (page-1)*100
     else:
         offset = 0
 
     endpoint = BASE_URL_SEARCH.format(
         key=GB_key, platform=platform, name=name, offset=offset)
+    print(endpoint)
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
     data = r.json()
     return(data)

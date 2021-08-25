@@ -20,20 +20,24 @@
 		{%block links%} {%endblock%}
 	</head>
 	<body>
-		{% for category, message in get_flashed_messages(with_categories=True)
-		%}
-		<div class="alert alert-{{ category }}">{{ message }}</div>
-		{%endfor%} {%block content%} {%endblock%}
-		<footer>
-			Powered By:
-			<a href="https://www.giantbomb.com/api/" target="_blank"
-				>Giant bomb</a
-			>
-			<span> and </span>
-			<a href="https://tastedive.com/read/api" target="_blank"
-				>Taste Dive</a
-			>
-		</footer>
+		<div id="page-container">
+			<div id="content-wrap">
+				{% for category, message in
+				get_flashed_messages(with_categories=True) %}
+				<div class="alert alert-{{ category }}">{{ message }}</div>
+				{%endfor%} {%block content%} {%endblock%}
+			</div>
+			<footer>
+				Powered By:
+				<a href="https://www.giantbomb.com/api/" target="_blank"
+					>Giant bomb</a
+				>
+				<span> and </span>
+				<a href="https://tastedive.com/read/api" target="_blank"
+					>Taste Dive</a
+				>
+			</footer>
+		</div>
 		<script src="https://unpkg.com/jquery"></script>
 		<script src="https://unpkg.com/axios/dist/axios.js"></script>
 		{%block scripts%} {%endblock%}

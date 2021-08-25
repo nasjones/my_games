@@ -14,6 +14,8 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
+MAX_INFO = 100
+
 app = Flask(__name__)
 app.register_error_handler(404, page_not_found)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -131,27 +133,14 @@ def logout():
     return render_template("logout.html")
 
 
-@app.route('/search/<title>/<int:platform>/<int:page>', methods=['GET', 'POST'])
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET'])
 @login_required
-def search(title=None, platform=None, page=1):
+def search():
     """Route allowing user to utilize the power of the api and search for games by title"""
-    # Sets the defaults for the page
-    game_list = None
-    pages = {}
+
     platforms = Platforms.query.order_by('name').all()
-    game_data = search_api(title, platform, page)
-    likes = [game.id for game in g.user.user_likes]
 
-    # Checks if a search was carried out based on the input
-    if game_data:
-        game_list = game_data["results"]
-        pages["amount"] = math.ceil(
-            game_data["number_of_total_results"]/5)
-        pages["query"] = title
-        pages["platform"] = platform
-
-    return(render_template('search.html', game_list=game_list, pages=pages, platforms=platforms, page=page, title=title, platform_id=platform, likes=likes))
+    return(render_template('search.html', platforms=platforms))
 
 
 @app.route('/game/<id>')
@@ -200,3 +189,28 @@ def unlike_game():
     db.session.delete(like)
     db.session.commit()
     return jsonify({"deleted": like.id})
+
+
+@app.route('/api/game/search', methods=["POST"])
+@login_required
+def game_search():
+    print(request.json)
+    title = request.json["title"]
+    platform = request.json["platform"]
+    page = request.json["page"]
+    game_list = None
+
+    game_data = search_api(title, platform, page)
+    likes = [game.id for game in g.user.user_likes]
+
+    # Checks if a search was carried out based on the input
+    if game_data:
+        game_list = game_data["results"]
+        pages = math.ceil(
+            game_data["number_of_total_results"]/MAX_INFO)
+    last = (pages <= page)
+
+    return jsonify({"game_list": game_list,
+                    "last": last,
+                    "likes": likes,
+                    })
