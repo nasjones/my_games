@@ -17,7 +17,7 @@ def page_not_found(e):
 app = Flask(__name__)
 app.register_error_handler(404, page_not_found)
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', 'postgresql:///my_games').replace("://", "ql://", 1))
+    os.environ.get('DATABASE_URL', 'postgresql:///my_games').replace("postgres://", "postgresql://", 1))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 # app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
@@ -132,7 +132,7 @@ def logout():
 
 
 @app.route('/search/<title>/<int:platform>/<int:page>', methods=['GET', 'POST'])
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search(title=None, platform=None, page=1):
     """Route allowing user to utilize the power of the api and search for games by title"""
