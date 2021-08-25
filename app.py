@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, flash, jsonify, request, session, g, url_for
-from models import User, Likes, Games, connect_db, db, reset_db, platform_setup, Platforms
+from models import User, Likes, Games, connect_db, db, platform_setup, Platforms
 from functools import wraps
 from forms import LoginForm, SignUpForm, SearchForm
 from sqlalchemy.exc import IntegrityError
