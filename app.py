@@ -143,6 +143,16 @@ def search():
     return(render_template('search.html', platforms=platforms))
 
 
+@app.route('/search/<title>', methods=['GET'])
+@login_required
+def title_search(title):
+    """Route allowing user to utilize the power of the api and search for games by title"""
+
+    platforms = Platforms.query.order_by('name').all()
+
+    return(render_template('similar.html', platforms=platforms, title=title))
+
+
 @app.route('/game/<id>')
 @login_required
 def game_display(id):
