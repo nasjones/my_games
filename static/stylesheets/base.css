@@ -30,7 +30,11 @@ header {
 }
 
 body {
-	background-color: rgb(189, 97, 87);
+	background-image: linear-gradient(
+		200deg,
+		rgb(255, 185, 197),
+		rgb(255, 255, 213)
+	);
 }
 #page-container {
 	position: relative;
