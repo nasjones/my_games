@@ -12,12 +12,6 @@ def connect_db(app):
     db.init_app(app)
 
 
-# def reset_db():
-#     db.drop_all()
-#     db.create_all()
-#     platform_setup()
-
-
 class Likes(db.Model):
     """Likes model"""
 
