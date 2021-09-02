@@ -19,10 +19,11 @@ This website allows users once logged in to search for video games and add them 
 -   When a game is liked if it is not already in the database it is then stored in our database.
 -   When a user visits a videogame's page the same thing happens if it is not already in our database then the information is stored and then displayed to the user.
 -   At the bottom of all game display pages there is a list of up to 5 video games similar to the one displayed this information comes from the tastedive api which is accessed on each game page.
+-   The api and route handling is coded using Python and Flask. Handling of the api calls and data is done using JavaScript. The database is a PostgreSQL database.
 
 ## Tech
 
-Python / Flask / PostgreSQL / CSS / HTML
+Python / JavaScript / Flask / PostgreSQL / CSS / HTML
 
 ## External APIs
 
