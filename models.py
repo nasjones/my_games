@@ -77,25 +77,24 @@ class Games(db.Model):
 
     @classmethod
     def add_game(cls, id, name, description, image_url, deck):
-        if description:
-            print(description)
-            description = re.search(
-                "(<p>.*?)(?=<h2|$)|(<div>.*?)(?=<h2|$)", description)
-            description = re.sub("(?=<a).*?(>)|(</a>)",
-                                 "", description.group())
-        else:
-            description = "Sorry no description available"
+      NO_DESC = "Sorry no description available"
+      
+      if description:
+            description = re.search("(<p>.*?)(?=<h2|$)|(<div>.*?)(?=<h2|$)", description)
+            description = re.sub("(?=<a).*?(>)|(</a>)", "", description.group()) if description else NO_DESC
+      else:
+            description = NO_DESC
 
-        if not image_url:
+      if not image_url:
             image_url = "./static/images/pixel-mark.png"
 
-        if not deck:
-            deck = "Sorry no description available"
+      if not deck:
+            deck = NO_DESC
 
-        game = Games(id=id, name=name, description=description,
+      game = Games(id=id, name=name, description=description,
                      image_url=image_url, deck=deck)
-        db.session.add(game)
-        return game
+      db.session.add(game)
+      return game
 
 
 class User(db.Model):

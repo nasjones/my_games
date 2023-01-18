@@ -58,7 +58,7 @@ def similar_games(name):
     endpoint = BASE_URL_SIMILAR.format(
         key=TD_key, name=name)
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
-    data = r.json()["Similar"]["Results"]
+    data = r.json()["Similar"]["Results"] if r.status_code == 200 else None
     output = []
     if data:
         output = random.sample(data, 5)
