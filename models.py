@@ -72,29 +72,44 @@ class Games(db.Model):
         nullable=False
     )
 
+    similar_query = db.Column(
+        db.Text,
+        nullable=False
+    )
+
     def __repr__(self):
         return f'{self.name}'
 
     @classmethod
-    def add_game(cls, id, name, description, image_url, deck):
-      NO_DESC = "Sorry no description available"
-      
-      if description:
-            description = re.search("(<p>.*?)(?=<h2|$)|(<div>.*?)(?=<h2|$)", description)
-            description = re.sub("(?=<a).*?(>)|(</a>)", "", description.group()) if description else NO_DESC
-      else:
-            description = NO_DESC
+    def add_game(cls, id, name, description, image_url, deck, similar_query):
+        NO_DESC = "Sorry no description available"
 
-      if not image_url:
+        if description:
+            formatted_desc = re.search(
+                "(<p>.*?)(.*)|(<div>.*?)(.*)", description)
+            formatted_desc = re.search(
+                "(?<=/h2>)(.*?)(.*)", description) if not formatted_desc else formatted_desc
+            formatted_desc = re.sub('(?=<(a|noscript)).*?(>)|(</(a|noscript)>)|(data-align=|style=).*?(".*?")',
+                                    "", formatted_desc.group()) if formatted_desc else NO_DESC
+        else:
+            formatted_desc = NO_DESC
+
+        if formatted_desc[0] != '<':
+            formatted_desc = '<p>' + formatted_desc + '</p>'
+
+        if not image_url:
             image_url = "./static/images/pixel-mark.png"
 
-      if not deck:
+        if not deck:
             deck = NO_DESC
 
-      game = Games(id=id, name=name, description=description,
-                     image_url=image_url, deck=deck)
-      db.session.add(game)
-      return game
+        if not similar_query:
+            similar_query = ""
+
+        game = Games(id=id, name=name, description=formatted_desc,
+                     image_url=image_url, deck=deck, similar_query=similar_query)
+        db.session.add(game)
+        return game
 
 
 class User(db.Model):

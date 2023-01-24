@@ -23,7 +23,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = True
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 
 connect_db(app)
 
@@ -162,12 +161,23 @@ def game_display(id):
     # if the game isnt in the database make an api call
     if not game:
         game_data = single_game(id)["results"]
+        names = ["game:"+franchise["name"]
+                 for franchise in game_data["franchises"] or [] + game_data["similar_games"] or []]
+
+        if game_data["name"] in names:
+            names.remove(game_data["name"])
 
         game = Games.add_game(
-            id=game_data["guid"], name=game_data["name"], description=game_data["description"], image_url=game_data["image"]["medium_url"], deck=game_data["deck"])
+            id=game_data["guid"],
+            name=game_data["name"],
+            description=game_data["description"],
+            image_url=game_data["image"]["medium_url"],
+            deck=game_data["deck"],
+            similar_query=','.join(set(names))
+        )
     db.session.commit()
     # make the call to find similar games
-    similar = similar_games(game.name)
+    similar = similar_games(f"game:{game.name},{game.similar_query}")
     liked = (game in g.user.user_likes)
     return render_template('game.html', game=game, similar=similar, liked=liked)
 
@@ -204,7 +214,6 @@ def unlike_game():
 @app.route('/api/game/search', methods=["POST"])
 @login_required
 def game_search():
-    print(request.json)
     title = request.json["title"]
     platform = request.json["platform"]
     page = request.json["page"]

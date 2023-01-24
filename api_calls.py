@@ -13,7 +13,7 @@ BASE_URL_SEARCH = "https://www.giantbomb.com/api/games/?api_key={key}&offset={of
 
 BASE_URL_GAME = "https://www.giantbomb.com/api/game/{id}/?api_key={key}&format=json"
 
-BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={name}&type=game&limit=30&k={key}"
+BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={query}&type=game&limit=30&k={key}"
 
 
 def search_api(name, platform_id, page):
@@ -38,7 +38,6 @@ def search_api(name, platform_id, page):
 
     endpoint = BASE_URL_SEARCH.format(
         key=GB_key, platform=platform, name=name, offset=offset)
-    print(endpoint)
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
     data = r.json()
     return(data)
@@ -53,10 +52,11 @@ def single_game(id):
     return(data)
 
 
-def similar_games(name):
+def similar_games(query):
     """function used to reach the similar video games api"""
     endpoint = BASE_URL_SIMILAR.format(
-        key=TD_key, name=name)
+        key=TD_key, query=query)
+
     r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
     data = r.json()["Similar"]["Results"] if r.status_code == 200 else None
     output = []
