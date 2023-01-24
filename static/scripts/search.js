@@ -68,7 +68,7 @@ async function getGames(title, platform, page) {
 
 function addGame(game, liked) {
 	let li = document.createElement("li");
-	li.className = "game_item";
+	li.className = "game-item";
 
 	let img = document.createElement("img");
 	if (game.image) {
@@ -77,15 +77,18 @@ function addGame(game, liked) {
 		img.src = "static/images/pixel-mark.png";
 	}
 	img.alt = `${game.name} image`;
-	img.className = "game_image";
+	img.className = "game-image";
 
 	li.appendChild(img);
 
 	let div = document.createElement("div");
-	div.className = "info_wrap";
+	div.className = "search-wrap";
 	let anchor = document.createElement("a");
 	anchor.href = `/game/${game.guid}`;
-	anchor.text = `${game.name}`;
+	let title = document.createElement("h2");
+	title.innerHTML = `${game.name}`;
+	anchor.appendChild(title);
+
 	let p = document.createElement("p");
 	p.innerText = `Description: ${game.deck}`;
 

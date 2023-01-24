@@ -3,9 +3,10 @@
 	flex-wrap: wrap;
 	padding-inline-start: inherit;
 }
-.game_item {
+
+.game-item {
 	list-style-type: none;
-	border: solid 2px lightblue;
+	border: solid 2px black;
 	border-radius: 5px;
 	display: flex;
 	flex-grow: 1;
@@ -14,20 +15,22 @@
 	padding: 2px;
 }
 
-.game_item > * {
+.game-item > * {
 	padding: 10px;
 }
 
-.game_image {
+.game-image {
 	max-height: 45vh;
 	max-width: 50%;
 }
 
-.info_wrap {
+.search-wrap {
 	width: 50%;
+	flex-grow: 1;
 }
+
 @media screen and (max-width: 700px) {
-	.game_item {
+	.game-item {
 		width: 90%;
 	}
 }
@@ -37,7 +40,7 @@
 }
 
 .star {
-	font-size: 1rem;
+	font-size: 2rem;
 	color: rgb(16, 45, 99);
 }
 
