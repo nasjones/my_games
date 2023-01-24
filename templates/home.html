@@ -11,30 +11,18 @@
 />
 {%endblock%}
 <!-- content block -->
-{%block content%}
-<header>
-	<div>My Games</div>
-	<div id="head-wrap">
-		<a href="/search">Search</a>
-		&#9737;
-		<a href="/logout">logout</a>
-	</div>
-</header>
+{%block content%} {% include 'header.html' %}
 <h1>Likes</h1>
 {%if likes%}
 <ul id="game_list">
 	{%for item in likes%}
-	<li
-		class="game_item"
-		data-desc="{{item.description}}"
-		data-id="{{item.id}}"
-	>
+	<li class="game-item" data-desc="{{item.description}}" data-id="{{item.id}}">
 		<img
 			src="{{item.image_url}}"
 			alt="{{item.name}} image"
-			class="game_image"
+			class="game-image"
 		/>
-		<div class="info_wrap">
+		<div class="search-wrap">
 			<a href="/game/{{item.id}}">{{item.name}}</a>
 			<p>{{item.deck}}</p>
 		</div>

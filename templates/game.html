@@ -1,4 +1,5 @@
 {%extends 'base.html'%}
+
 <!-- Title block -->
 {%block title%}
 <title>{{game.name}} display</title>
@@ -15,22 +16,13 @@
 />
 {%endblock%}
 <!-- content block -->
-{%block content%}
-<header>
-	<div>My Games</div>
-	<div id="head-wrap">
-		<a href="/">Home</a>
-		&#9737;
-		<a href="/search">Search</a>
-		&#9737;
-		<a href="/logout">logout</a>
-	</div>
-</header>
+{%block content%} {% include 'header.html' %}
 <h1>{{game.name}}</h1>
 <div id="info-wrap">
-	<div>
+	<div id="game-photo">
 		<img src="{{game.image_url}}" alt="{{game.name}} photo" id="game-pic" />
 		<br />
+		<h2>{{game.name}}</h2>
 		<label class="star-wrap">
 			<input
 				type="checkbox"
