@@ -13,7 +13,7 @@ BASE_URL_SEARCH = "https://www.giantbomb.com/api/games/?api_key={key}&offset={of
 
 BASE_URL_GAME = "https://www.giantbomb.com/api/game/{id}/?api_key={key}&format=json"
 
-BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={query}&type=game&limit=30&k={key}"
+BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={query}&type=game&limit=50&k={key}"
 
 
 def search_api(name, platform_id, page):
@@ -61,6 +61,6 @@ def similar_games(query):
     data = r.json()["Similar"]["Results"] if r.status_code == 200 else None
     output = []
     if data:
-        output = random.sample(data, 5)
+        output = random.sample(data, 6)
 
     return(output)
