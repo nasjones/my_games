@@ -18,7 +18,7 @@ This website allows users once logged in to search for video games and add them 
 - Then the results are returned and displayed on the page with a like option for every game to add the game to a user's likes.
 - When a game is liked if it is not already in the database it is then stored in our database.
 - When a user visits a videogame's page the same thing happens if it is not already in our database then the information is stored and then displayed to the user.
-- At the bottom of all game display pages there is a list of up to 5 video games similar to the one displayed this information comes from the tastedive api which is accessed on each game page.
+- At the bottom of all game display pages there is a list of up to 5 video games similar to the one displayed this information comes from the IGDB api which is accessed on each game page.
 - The api and route handling is coded using Python and Flask. Handling of the api calls and data is done using JavaScript. The database is a PostgreSQL database.
 
 ## Tech
@@ -27,7 +27,7 @@ Python / JavaScript / Flask / PostgreSQL / CSS / HTML
 
 ## External APIs
 
-- Created using the [Giant Bomb api](https://www.giantbomb.com/api/) to retrieve the video game information and the [Taste Dive api](https://tastedive.com/read/api) to find the similar games.
+- Created using the [Giant Bomb api](https://www.giantbomb.com/api/) to retrieve the video game information and the [IGDB api](https://m.igdb.com/api) to find the similar games.
 
 ## API Structure
 

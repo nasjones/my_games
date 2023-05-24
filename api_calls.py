@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+from threading import Timer
 from models import Platforms
 import os
 import requests
@@ -7,13 +8,19 @@ import random
 load_dotenv()
 
 GB_key = os.environ.get("gamebomb_key")
-TD_key = os.environ.get("tastedive_key")
+CLIENT_ID = os.environ.get("client_id")
+CLIENT_SECRET = os.environ.get("client_secret")
 
 BASE_URL_SEARCH = "https://www.giantbomb.com/api/games/?api_key={key}&offset={offset}&format=json&filter={name},{platform}&field_list=deck,description,guid,image,name"
 
 BASE_URL_GAME = "https://www.giantbomb.com/api/game/{id}/?api_key={key}&format=json"
 
-BASE_URL_SIMILAR = "https://tastedive.com/api/similar?q={query}&type=game&limit=50&k={key}"
+SIMILAR_URL = "https://api.igdb.com/v4/games"
+
+AUTH_ENDPOINT = f"https://id.twitch.tv/oauth2/token?client_id={CLIENT_ID}&client_secret={CLIENT_SECRET}&grant_type=client_credentials"
+
+auth_state = False
+token = ""
 
 
 def search_api(name, platform_id, page):
@@ -54,13 +61,42 @@ def single_game(id):
 
 def similar_games(query):
     """function used to reach the similar video games api"""
-    endpoint = BASE_URL_SIMILAR.format(
-        key=TD_key, query=query)
+    global auth_state
+    global token
+    if not auth_state:
+        token, expiration = auth()
+        t = Timer(expiration, unauth)
+        t.start()
 
-    r = requests.get(endpoint, headers={'user-agent': 'Nas-test-app'})
-    data = r.json()["Similar"]["Results"] if r.status_code == 200 else None
+    payload = f'fields similar_games.name; where name = \"{query}\";'
+
+    r = requests.request("POST", url=SIMILAR_URL,
+                         headers={
+                             'Client-ID': CLIENT_ID,
+                             'Authorization': f"Bearer {token}"
+                         },
+                         data=payload
+                         )
+
+    json_data = r.json()[0] if r.status_code == 200 and r.json() else {
+        "similar_games": []}
+    data = json_data["similar_games"]
     output = []
     if data:
-        output = random.sample(data, 6)
+        output = random.sample(data, 5)
 
     return(output)
+
+
+def auth():
+    """Function used to get new credentials"""
+    global auth_state
+    r = requests.post(url=AUTH_ENDPOINT)
+    data = r.json()
+    auth_state = True
+    return data["access_token"], data["expires_in"]
+
+
+def unauth():
+    global auth_state
+    auth_state = False

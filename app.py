@@ -162,23 +162,19 @@ def game_display(id):
     # if the game isnt in the database make an api call
     if not game:
         game_data = single_game(id)["results"]
-        names = ["game:"+franchise["name"]
-                 for franchise in game_data["franchises"] or [] + game_data["similar_games"] or []]
-
-        if game_data["name"] in names:
-            names.remove(game_data["name"])
+        title = game_data["name"]
 
         game = Games.add_game(
             id=game_data["guid"],
-            name=game_data["name"],
+            name=title,
             description=game_data["description"],
             image_url=game_data["image"]["medium_url"],
             deck=game_data["deck"],
-            similar_query=','.join(set(names))
+            similar_query=''  # Left behind to avoid haing to rollback for now
         )
     db.session.commit()
     # make the call to find similar games
-    similar = similar_games(f"game:{game.name},{game.similar_query}")
+    similar = similar_games(game.name)
     liked = (game in g.user.user_likes)
     return render_template('game.html', game=game, similar=similar, liked=liked)
 

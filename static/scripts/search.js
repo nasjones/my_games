@@ -21,7 +21,7 @@ async function handleSubmission(e) {
 	currentTitle = e.target[0].value;
 	currentPlatform = parseInt(e.target[1].value);
 	gameList.empty();
-	getGames(currentTitle, currentPlatform, currentPage);
+	await getGames(currentTitle, currentPlatform, currentPage);
 }
 
 $(document).on("change", ".star-check", likeGame);
@@ -109,6 +109,7 @@ function addGame(game, liked) {
 		description: game.description,
 		image_url: img.src,
 		deck: game.deck,
+		similar_query: "",
 	});
 	let span = document.createElement("span");
 	span.className = "star";
